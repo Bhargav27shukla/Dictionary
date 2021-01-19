@@ -1,0 +1,298 @@
+import tkinter
+from tkinter import *
+from tkinter import ttk
+from PIL import Image, ImageTk
+import pandas as pd
+import sys
+import win32com.client as win32
+import datetime
+
+date_time = datetime.datetime.now()
+
+def destroy_abbrevGUI():
+   abbrev_GUI.sec_wind.destroy()
+   main_GUI()
+
+def destroy_commandGUI():
+   command_GUI.th_window.destroy()
+   main_GUI()
+
+def abbrev_GUI(event):
+   main_GUI.window.destroy()
+   abbrev_GUI.sec_wind = tkinter.Tk()
+   #sec_wind.geometry("700x450")
+   abbrev_GUI.sec_wind.title("Nand Portable Dictionary Search Tool V3 29-Jul-2020")
+   
+   WIDTH, HEIGTH = 440, 359
+   abbrev_GUI.sec_wind.geometry('{}x{}'.format(WIDTH, HEIGTH))
+   canvas2 = Canvas(abbrev_GUI.sec_wind, width=WIDTH, height=HEIGTH)
+   canvas2.pack()
+   
+   if any([True for k,v in main_GUI.dict_abb.items() if v == lst_sel]):
+      k = list(main_GUI.dict_abb.keys())[list(main_GUI.dict_abb.values()).index(lst_sel)]
+      function_abb = main_GUI.list_of_Abb_fn[k]
+      expan_abb = main_GUI.list_of_Abb_expan[k]
+      explain_abb = main_GUI.list_of_Abb_explain[k]
+      print("true")
+   else:
+      print("false")
+
+   abbrev_GUI.img = ImageTk.PhotoImage(Image.open(IMAGE_PATH).resize((WIDTH, HEIGTH), Image.ANTIALIAS))
+   canvas2.background = abbrev_GUI.img  
+   bg = canvas2.create_image(0, 0, anchor=NW, image= abbrev_GUI.img)
+
+   v1 = StringVar(abbrev_GUI.sec_wind, value= lst_sel)
+   abbrev_GUI.sec_l2=Label(abbrev_GUI.sec_wind,text="Abbreviation:",font=("Arial Bold",12),bg="black",fg="white", anchor = NW)
+   abbrev_GUI.sec_l2.place(x=10, y=60 ,height=30, width=200)
+   abbrev_GUI.sec_abb= Entry(abbrev_GUI.sec_wind, textvariable = v1)
+   abbrev_GUI.sec_abb.place(x=210,y=60, height=30,width=200)
+
+   v2 = StringVar(abbrev_GUI.sec_wind, value= function_abb)
+   abbrev_GUI.sec_l3=Label(abbrev_GUI.sec_wind,text="Function:",font=("Arial Bold",12),bg="black",fg="white", anchor = NW)
+   abbrev_GUI.sec_l3.place(x=10, y=100 ,height=30, width=200)
+   abbrev_GUI.sec_fn = Entry(abbrev_GUI.sec_wind, textvariable = v2)
+   abbrev_GUI.sec_fn.place(x=210,y=100, height=30,width=200)
+
+   v3 = StringVar(abbrev_GUI.sec_wind, value= expan_abb)
+   abbrev_GUI.sec_l4=Label(abbrev_GUI.sec_wind,text="Expansion:",font=("Arial Bold",12),bg="black",fg="white", anchor = NW)
+   abbrev_GUI.sec_l4.place(x=10, y=140 ,height=30, width=200)
+   abbrev_GUI.sec_expan = Entry(abbrev_GUI.sec_wind, textvariable = v3)
+   abbrev_GUI.sec_expan.place(x=210,y=140, height=30,width=200)
+
+   v4 = StringVar(abbrev_GUI.sec_wind, value= explain_abb)#.replace('.','.\n'))
+   abbrev_GUI.sec_l5=Label(abbrev_GUI.sec_wind,text="Explanation:",font=("Arial Bold",12),bg="black",fg="white", anchor = NW)
+   abbrev_GUI.sec_l5.place(x=10, y=180 ,height=30, width=200)
+   #abbrev_GUI.sec_explan = Message(abbrev_GUI.sec_wind, textvariable = v4)
+   abbrev_GUI.sec_explan = Text(abbrev_GUI.sec_wind, relief="flat", borderwidth=0)
+   abbrev_GUI.sec_explan.insert(INSERT, explain_abb)
+   abbrev_GUI.sec_explan.insert(END,"")
+   abbrev_GUI.sec_explan.place(x=210,y=180, height=80,width=200)
+
+   abbrev_GUI.sec_bt1=Button(abbrev_GUI.sec_wind,text="Search another",bg="black",fg="white", command = destroy_abbrevGUI)
+   abbrev_GUI.sec_bt1.place (x=210, y=270, height=30, width=98)
+
+   abbrev_GUI.sec_bt2=Button(abbrev_GUI.sec_wind,text="I am done",bg="black",fg="white",command = quit)
+   abbrev_GUI.sec_bt2.place (x=312, y=270, height=30, width=98)
+   abbrev_GUI.sec_wind.mainloop()
+
+
+def command_GUI(event):
+   main_GUI.window.destroy()
+   command_GUI.th_window = tkinter.Tk()
+   command_GUI.th_window.title("Nand Portable Dictionary Search Tool V3 29-Jul-2020")
+
+   if any([True for k,v in main_GUI.dict_cmd.items() if v == lst_sel]):
+      k = list(main_GUI.dict_cmd.keys())[list(main_GUI.dict_cmd.values()).index(lst_sel)]
+      function_cmd = main_GUI.list_of_cmd_fn[k]
+      expan_cmd = main_GUI.list_of_cmd_expan[k]
+      explain_cmd = main_GUI.list_of_cmd_explain[k]
+      print("true")
+   else:
+      print("false")
+
+   def GUI3():
+      if(command_GUI.th_CheckVar1.get()):
+         WIDTH, HEIGTH = 880, 359
+         command_GUI.th_window.geometry('{}x{}'.format(WIDTH, HEIGTH))
+         canvas1.config(width=WIDTH, height=HEIGTH)
+         image1 = image.resize((WIDTH, HEIGTH), Image.ANTIALIAS)
+         command_GUI.img = ImageTk.PhotoImage(image1)
+         bg = canvas1.create_image(0, 0, anchor=NW, image= command_GUI.img)
+
+         command_GUI.th_l5=Label(command_GUI.th_window,text="Clock Domain:",font=("Arial Bold",12),bg="black",fg="white", anchor = NW)
+         command_GUI.th_l5.place(x=450, y=60 ,height=30, width=200)
+         command_GUI.th_clkdom= Entry(command_GUI.th_window)
+         command_GUI.th_clkdom.place(x=650,y=60, height=30,width=200)
+
+         command_GUI.th_l6=Label(command_GUI.th_window,text="Enable:",font=("Arial Bold",12),bg="black",fg="white", anchor = NW)
+         command_GUI.th_l6.place(x=450, y=100 ,height=30, width=200)
+         command_GUI.th_enable= Entry(command_GUI.th_window)
+         command_GUI.th_enable.place(x=650,y=100, height=70,width=200)
+
+         command_GUI.th_l9=Label(command_GUI.th_window,text="Prerequisite",font=("Arial Bold",12),bg="black",fg="white")
+         command_GUI.th_l9.place(x=610, y=180 ,height=30, width=100)
+
+         command_GUI.th_l7=Label(command_GUI.th_window,text="Commands:",font=("Arial Bold",12),bg="black",fg="white", anchor = NW)
+         command_GUI.th_l7.place(x=450, y=220 ,height=30, width=200)
+         command_GUI.th_cmds = Entry(command_GUI.th_window)
+         command_GUI.th_cmds.place(x=650,y=220, height=30,width=200)
+
+         command_GUI.th_l8=Label(command_GUI.th_window,text="Conf.:",font=("Arial Bold",12),bg="black",fg="white", anchor = NW)
+         command_GUI.th_l8.place(x=450, y=260 ,height=30, width=200)
+         command_GUI.th_conf = Entry(command_GUI.th_window)
+         command_GUI.th_conf.place(x=650,y=260, height=30,width=200)
+
+      else:
+         WIDTH, HEIGTH = 440, 359
+         command_GUI.th_window.geometry('{}x{}'.format(WIDTH, HEIGTH))
+         canvas1.config(width=WIDTH, height=HEIGTH)
+         image1 = image.resize((WIDTH, HEIGTH), Image.ANTIALIAS)
+         command_GUI.img = ImageTk.PhotoImage(image1)
+         bg = canvas1.create_image(0, 0, anchor=NW, image= command_GUI.img)
+
+   WIDTH, HEIGTH = 440, 359
+   command_GUI.th_window.geometry('{}x{}'.format(WIDTH, HEIGTH))
+
+   canvas1 = Canvas(command_GUI.th_window, width=WIDTH, height=HEIGTH)
+   canvas1.pack()
+
+   image = Image.open(IMAGE_PATH)
+   image = image.resize((WIDTH, HEIGTH), Image.ANTIALIAS)
+   command_GUI.img = ImageTk.PhotoImage(image)
+   print(command_GUI.img)
+   canvas1.background = command_GUI.img
+   bg = canvas1.create_image(0, 0, anchor=NW, image= command_GUI.img)
+
+   command_GUI.th_CheckVar1 = IntVar()
+   command_GUI.th_C1 = Checkbutton(command_GUI.th_window, text = "Advanced Info", variable = command_GUI.th_CheckVar1, onvalue = 1, offvalue = 0,bg="black",fg="white",command=GUI3, selectcolor="grey")
+   command_GUI.th_C1.place(x=310,y=20, height=30,width=100)
+
+   command_GUI.th_l2=Label(command_GUI.th_window,text="Command:",font=("Arial Bold",12),bg="black",fg="white", anchor = NW)
+   command_GUI.th_l2.place(x=10, y=60 ,height=30, width=200)
+   command_GUI.th_command= Entry(command_GUI.th_window)
+   command_GUI.th_command.place(x=210,y=60, height=30,width=200)
+
+   command_GUI.th_l3=Label(command_GUI.th_window,text="Description:",font=("Arial Bold",12),bg="black",fg="white", anchor = NW)
+   command_GUI.th_l3.place(x=10, y=100 ,height=30, width=200)
+   command_GUI.th_des = Entry(command_GUI.th_window)
+   command_GUI.th_des.place(x=210,y=100, height=80,width=200)
+
+   command_GUI.th_l4=Label(command_GUI.th_window,text="Comment:",font=("Arial Bold",12),bg="black",fg="white", anchor = NW)
+   command_GUI.th_l4.place(x=10, y=190 ,height=30, width=200)
+   command_GUI.th_comment = Entry(command_GUI.th_window)
+   command_GUI.th_comment.place(x=210,y=190, height=60,width=200)
+
+   command_GUI.th_bt1=Button(command_GUI.th_window,text="Search another",bg="black",fg="white", command = destroy_commandGUI)
+   command_GUI.th_bt1.place (x=210, y=270, height=30, width=98)
+
+   command_GUI.th_bt2=Button(command_GUI.th_window,text="I am done",bg="black",fg="white", command = quit)
+   command_GUI.th_bt2.place (x=312, y=270, height=30, width=98)
+   command_GUI.th_window.mainloop()
+
+
+def Emailer(recipient, subject):
+   outlook = win32.Dispatch('outlook.application')
+   mail = outlook.CreateItem(0)
+   mail.To = recipient
+   mail.Subject = subject
+#   mail.HtmlBody = text
+   mail.Display(True)
+
+def on_option_change(event):
+   main_GUI.dict_cmd = {}
+   selected = main_GUI.varWin.get()
+   print(selected)
+   if(selected == "Abbreviation"):
+      lst_sel = main_GUI.Lb1.get(ACTIVE)
+      main_GUI.Lb1.delete(0,'end')
+      for each_abb in range(0, len(main_GUI.list_of_Abb)):
+         main_GUI.Lb1.insert(each_abb, main_GUI.list_of_Abb[each_abb])
+         main_GUI.dict_abb[each_abb] = main_GUI.list_of_Abb[each_abb]
+      lst_sel = main_GUI.Lb1.get(ACTIVE)
+      main_GUI.Lb1.bind("<Double-Button-1>", abbrev_GUI)
+   elif(selected == "Commands"):
+      xlsx_opened = pd.read_excel ("Nand_Portable_Dictionary_Search_Tool_Ver3.xlsm", sheet_name='Commands')
+      main_GUI.list_of_cmd = xlsx_opened['address code']
+      main_GUI.Lb1.delete(0,'end')
+      for each_cmd in range(0, len(main_GUI.list_of_cmd)):
+         main_GUI.Lb1.insert(each_cmd, main_GUI.list_of_cmd[each_cmd])
+         main_GUI.dict_cmd[each_cmd] = main_GUI.list_of_cmd[each_cmd]
+      lst_sel = main_GUI.Lb1.get(ACTIVE)
+      main_GUI.Lb1.bind("<Double-Button-1>", command_GUI)
+
+def filter_List(event):
+   res = []
+   print(main_GUI.search1.get())
+   if(main_GUI.varWin.get() == "Abbreviation"):
+      main_GUI.list_of_Abb1 = map(str, main_GUI.list_of_Abb)
+
+      for xd in main_GUI.list_of_Abb1:
+         if((xd.lower()).startswith((main_GUI.search1.get()).lower())):
+            res.append(xd)
+      main_GUI.Lb1.delete(0,'end')
+      for each_abb1 in range(0, len(res)):
+         main_GUI.Lb1.insert(each_abb1, res[each_abb1])
+   elif(main_GUI.varWin.get() == "Commands"):
+      main_GUI.list_of_cmd1 = map(str, main_GUI.list_of_cmd)
+
+      for xd in main_GUI.list_of_cmd1:
+         if((xd.lower()).startswith((main_GUI.search1.get()).lower())):
+            res.append(xd)
+      main_GUI.Lb1.delete(0,'end')
+      for each_cmd1 in range(0, len(res)):
+         main_GUI.Lb1.insert(each_cmd1, res[each_cmd1])
+
+def main_GUI():
+   main_GUI.window = tkinter.Tk()
+   main_GUI.window.title("Nand Portable Dictionary Search Tool V3 29-Jul-2020")
+
+   OPTIONS = ["Abbreviation", "Commands"] 
+
+#   IMAGE_PATH = r'C:\Users\1000280073\Desktop\python\nand_dict\asd1.png'
+   WIDTH, HEIGTH = 641, 359
+   main_GUI.window.geometry('{}x{}'.format(WIDTH, HEIGTH)) 
+   canvas = Canvas(main_GUI.window, width=WIDTH, height=HEIGTH) 
+   canvas.pack()
+
+   main_GUI.img = ImageTk.PhotoImage(Image.open(IMAGE_PATH).resize((WIDTH, HEIGTH), Image.ANTIALIAS))
+   print(main_GUI.img)
+   canvas.background = main_GUI.img
+   bg = canvas.create_image(0, 0, anchor=NW, image= main_GUI.img)
+
+   main_GUI.bt=Button(main_GUI.window,text="Update CSV",bg="black",fg="white", borderwidth=1)
+   #bt.attributes("-alpha", 0.5)
+   main_GUI.bt.place (x=500, y=10, height=30, width=100)
+
+   main_GUI.varWin = StringVar(main_GUI.window)
+   main_GUI.varWin.set(OPTIONS[0]) # default value
+
+   main_GUI.red = OptionMenu(main_GUI.window, main_GUI.varWin, *OPTIONS, command=on_option_change)
+   main_GUI.red["bg"] = "white"
+   main_GUI.red["activebackground"] = "white"
+   main_GUI.red["highlightthickness"]=0
+   main_GUI.varWin.set("Abbreviation")
+   main_GUI.red.place(x=400,y=50, height=30, width=200)
+
+   main_GUI.l2=Label(main_GUI.window,text="Enter Search Item:",font=("Arial Bold",12),bg="black",fg="white", anchor = NW)
+   main_GUI.l2.place(x=200, y=90 ,height=50, width=200)
+   main_GUI.search1 = Entry(main_GUI.window)
+   main_GUI.search1.place(x=400,y=90, height=30,width=200)
+   main_GUI.search1.bind("<KeyRelease>", filter_List)
+
+   main_GUI.l3=Label(main_GUI.window, text="Filtered Items:", font=("Arial Bold",12), bg="black", fg="white", anchor = NW)
+   main_GUI.l3.place(x=200, y=130 ,height=50, width=200)
+   main_GUI.scrollbar = Scrollbar(main_GUI.window)
+   main_GUI.scrollbar.place(x=580, y=130 ,height=100, width=20)
+   main_GUI.Lb1 = Listbox(main_GUI.window, yscrollcommand = main_GUI.scrollbar.set, selectmode = SINGLE)
+   main_GUI.Lb1.place(x=400,y=130, height=100,width=180)
+   main_GUI.scrollbar.config( command = main_GUI.Lb1.yview )
+
+   main_GUI.dict_abb = {}
+   file_opened = pd.read_csv ("SDJD-315516-ENG_NAND_dictionary_v46.csv", encoding= 'unicode_escape')
+   main_GUI.list_of_Abb = file_opened['Abbreviation']
+   main_GUI.list_of_Abb_fn = file_opened['Category']
+   main_GUI.list_of_Abb_expan = file_opened['Explanation']
+   main_GUI.list_of_Abb_explain = file_opened['Note']
+   for each_abb in range(0, len(main_GUI.list_of_Abb)):
+      main_GUI.dict_abb[each_abb] = main_GUI.list_of_Abb[each_abb]
+      main_GUI.Lb1.insert(each_abb, main_GUI.list_of_Abb[each_abb])
+   global lst_sel
+   lst_sel = main_GUI.Lb1.get(ACTIVE)
+   main_GUI.Lb1.bind("<Double-Button-1>", abbrev_GUI)
+
+   main_GUI.varVer = StringVar()
+   main_GUI.l4=Message(main_GUI.window, textvariable = main_GUI.varVer, font=("Arial",9),bg="black",fg="yellow", width = 620, bd=2, relief = RIDGE)
+   main_GUI.varVer.set( "Used Version:\nCommand Reference --> SECJV-SDJD-234516-BI9508 BiCS5 512Gb D3 2plane DesignManual\nAcronym Reference   --> (v. 73) "+str(date_time)+"\nhttps://nandwiki.sandisk.com/display/MEMORYTRAINING/NAND+dictionary")
+   main_GUI.l4.place(x=10, y=240 ,height=90, width=620, anchor = NW)
+
+   main_GUI.l5=Label(main_GUI.window,text="Queries: Karthik.Muthukrishnan@xyz.com",font=("Arial",9),bg="black",fg="white")
+   main_GUI.l5.place(x=378, y=330 ,height= 16, width=250)
+   main_GUI.l5.bind("<Button-1>", lambda e: Emailer("Karthik.Muthukrishnan@xyz.com", "Queries: Nand Portable Dictionary Search Tool"))
+
+   main_GUI.window.resizable(False, False)
+   main_GUI.window.mainloop()
+
+IMAGE_PATH = r'C:\Users\1000280073\Desktop\python\nand_dict\asd1.png'
+main_GUI()
+
+
